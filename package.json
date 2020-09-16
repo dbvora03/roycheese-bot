@@ -2,7 +2,7 @@
   "name": "roycheese-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/bot.js",
@@ -21,6 +21,10 @@
   "homepage": "https://github.com/dbvora03/roycheese-bot#readme",
   "dependencies": {
     "discord.js": "^12.3.1",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "ffmpeg-static": "^4.2.7",
+    "fs": "0.0.1-security",
+    "opusscript": "0.0.7",
+    "ytdl-core": "^3.2.2"
   }
 }
