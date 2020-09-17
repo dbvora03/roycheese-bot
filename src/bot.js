@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const { Client, Attachment } = require('discord.js');
+const { appendFile } = require('fs');
 
 const ytdl = require('ytdl-core');
 
@@ -16,50 +17,23 @@ var servers  = {};
 
 var version = '1.2'
 
+eventList = []
+
+class gameEvent {
+    constructor (name) {
+        this.name = name
+        this.date = date
+
+
+    }
+
+}
+
 
 bot.on('ready', async (message) => {
     console.log(`${bot.user.tag} has logged in`)
-
-
-    if (n == 3) {
-        message.channel
-    }
-
 });
 
-/*
-bot.on('message'. async (message) => {
-
-    if(message.author.bot) return;
-    if (message.content.startsWith(PREFIX)) {
-        const [CMD_NAME, ...args] = message.content.trim().substring(PREFIX.length).split(/\s+/);
-        console.log(CMD_NAME);
-        console.log(args)
-
-        if (CMD_NAME === 'kick') {
-            if (!message.member.hasPermission('KICK_MEMBERS')) return message.reply("nah, im gonna intervene")
-            if (args.length === 0 ) return message.reply('please provide an argument') 
-            //const member = message.guild.membe\irs.cache
-            const member = message.guild.members.cache.get(args[0]);
-            if (member) {
-                member.kick().then((member) => message.channel.send(`${member} was kicked for not complying with roycheese`)).catch((err) => message.channel.send("Nah"))
-            } else {
-                message.channel.send("who?!?")
-            }
-        }
-    } else if (message.content.startsWith('ping')) {
-            message.channel.send('pong');
-    } else if (message.content.startsWith('roycheese?')) {
-            const replies = ['nah, call me pablo', 'tf you want?', 'no']
-            var selection = Math.random() * 3
-            var parsedSelection = selection.
-            message.channel.send("nah, call me Pablo ");
-    }
-
-
-})
-
-*/
 
 bot.on('message', async (message) => {
 
@@ -97,7 +71,7 @@ bot.on('message', async (message) => {
 
     }
 
-
+    if (message.content.startsWith(PREFIX)) {
     let args = message.content.substring(PREFIX.length).split(" ")
     //const [CMD_NAME, ...args] = message.content.trim().substring(PREFIX.length).split(/\s+/);
     switch (args[0]) {
@@ -143,6 +117,7 @@ bot.on('message', async (message) => {
             if(!message.guild.voiceConnection) {
                 message.member.voice.channel.join().then(function(connection) {
                 play(connection, message);
+                return
 
             })
         }
@@ -169,19 +144,64 @@ bot.on('message', async (message) => {
             if(message.guild.connection) {
                 message.guild.voiceConnection.disconnect();
             }
-    }
 
+        case 'help':
+            message.channel.send(
+            ```
+            Here are a list of commands for Roycheese bot.\n
+            \`>play [song-name]\` Skips song\n
+            \`>skip\` skips the current song being played\n
+            \`>stop\` stops all songs from playing\n
+            \`>kick [user]\` kicks the player, (you and the bot must have permissions)\n
+            \`>event create\` creates a new game event\n
+            \`>event view\` shows all events that currently exist\n
+            \`>event delete [name]\` deletes the event
+            ```
+            )
+        
+        case 'event':
+            if (!args[1]) {
+                message.channel.send("If you want to use the event features, type >help for more info")
+            }
+            if (args[1] == 'create') {
+                message.channel.send("What do you want to name the Event?").then(function() {
+                    let tempName = message.channel.content;                
+                }).then(function() {
+                    message.channel.send("When is the event? Enter in the form Month:Day:Year:Hour:Minute")
+                    let tempDate = message.channel.content;
+
+                    eventList.append(eventList[eventList.length + 1])
+                    new gameEvent = eventList[eventList.length + 1](tempName, tempDate)
+                    message.channel.send(`Your event has been created!\n Details: \n ${tempName.name} will be happening on ${tempName.date} \n Make sure to let your friends know!`)
+                })
+            } else if (args[1] == 'view') {
+                if (eventList.length == 0) {
+                    message.channel.send("You currently have no events")
+                } else {
+                    for (evento in eventList) {
+                        message.channel.send(`Event ${evento}: ${evento.name} happens on ${evento.date}`)
+                }
+            } 
+        } else if (args[1] == 'delete') {
+            if (!message.member.hasRole('eventMan')) return message.reply("nah, im gonna intervene")
+            if (!args[2]) return message.channel.reply("You need to mention an event -_-  ")
+            for (evento in eventList) {
+                if (evento == args[3]) {
+                    eventList.splice(evento.index, 1)
+                    message.channel.content("Your event has been removed! Noone showed up huh? Loner")
+
+                }
+            }
+        }
+
+
+    }
+}
 
 
     
     
     
 })
-
-bot.on('messageReactionAdd', async (reaction, user) => {
-    
-    
-    message.channel.send('tf you reacting at?')
-});
 
 bot.login(process.env.ROYCHEESE_BOT_TOKEN)
